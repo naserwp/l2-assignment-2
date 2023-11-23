@@ -99,6 +99,27 @@ const getUserOrdersFromDB = async (userId: string) => {
   return user.orders;
 };
 
+// calculate total price of orders
+const calculateTotalPriceOfOrders = async (userId: number): Promise<number> => {
+  try {
+    const user = await UserModel.findOne({ userId });
+    if (!user) {
+      throw { code: 404, description: 'User not found!' };
+    }
+
+    // Calculate total price of orders
+    const totalPrice = user.orders.reduce(
+      (total, order) => total + order.price * order.quantity,
+      0,
+    );
+
+    return totalPrice;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
@@ -107,4 +128,5 @@ export const UserServices = {
   deleteUserFromDB,
   addNewProductToOrderInDB,
   getUserOrdersFromDB,
+  calculateTotalPriceOfOrders,
 };
