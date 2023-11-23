@@ -1,10 +1,10 @@
-import { getUserByIdFromDB } from './user.service';
+// import { getUserByIdFromDB } from './user.service';
 // import { getAllUsersFromDB } from './user.service';
 // import { User } from './user.interface';
 // import { getAllUsers, createUser } from './user.controller';
 import { Request, Response } from 'express';
-import UserModel from './user.model';
-import { UserServices, getAllUsersFromDB } from './user.service';
+// import UserModel from './user.model';
+import { UserServices } from './user.service';
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -61,77 +61,32 @@ const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-// export const getUserById = async (req: Request, res: Response) => {
-//   try {
-//     const { userId } = req.params;
-//     const user = await UserServices.getUserByIdFromDB(Number(userId));
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { user: updatedUserData } = req.body;
 
-//     if (user) {
-//       res.status(200).json({
-//         success: true,
-//         message: 'User retrieved successfully',
-//         data: user,
-//       });
-//     } else {
-//       res.status(404).json({
-//         success: false,
-//         message: 'User not found',
-//         error: {
-//           code: 404,
-//           description: 'User not found!',
-//         },
-//       });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({
-//       success: false,
-//       message: 'Something went wrong',
-//       error,
-//     });
-//   }
-// };
+    const result = await UserServices.updateUserInDB(userId, updatedUserData);
 
-// export const getTotalPriceOfOrders = async (req: Request, res: Response) => {
-//   try {
-//     const { userId } = req.params;
-//     const totalPrice = await UserService.calculateTotalPriceOfOrders(
-//       Number(userId),
-//     );
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'Total price of orders calculated successfully',
-//       data: {
-//         userId: Number(userId),
-//         totalPrice,
-//       },
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     if (error.code === 404) {
-//       res.status(404).json({
-//         success: false,
-//         message: 'User not found',
-//         error: {
-//           code: 404,
-//           description: 'User not found!',
-//         },
-//       });
-//     } else {
-//       res.status(500).json({
-//         success: false,
-//         message: 'Something went wrong',
-//         error,
-//       });
-//     }
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: err,
+    });
+  }
+};
 
 export const UserControllers = {
   createUser,
   getAllUsers,
   getUserById,
-  //   getUserById,
+  updateUser,
   //   getTotalPriceOfOrders,
 };

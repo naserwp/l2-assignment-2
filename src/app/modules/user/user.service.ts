@@ -28,6 +28,14 @@ const getUserByIdFromDB = async (userId: string) => {
   return result;
 };
 
+// Add the following function for updating user information
+const updateUserInDB = async (userId: string, updatedUserData: User) => {
+  const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
+    new: true, // Return the updated document
+  });
+  return result;
+};
+
 /*
 export const calculateTotalPriceOfOrders = async (
   userId: number,
@@ -56,4 +64,5 @@ export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getUserByIdFromDB,
+  updateUserInDB,
 };
