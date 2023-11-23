@@ -36,6 +36,36 @@ const updateUserInDB = async (userId: string, updatedUserData: User) => {
   return result;
 };
 
+// delete user information
+const deleteUserFromDB = async (userId: string) => {
+  const result = await UserModel.deleteOne({ userId });
+  return result;
+};
+
+// add new product to order in db by user id
+
+const addNewProductToOrderInDB = async (
+  userId: string,
+  productName: string,
+  price: number,
+  quantity: number,
+) => {
+  const user = await UserModel.findOne({ userId });
+  if (!user) {
+    return null;
+  }
+  if (!user.orders) {
+    user.orders = [];
+  }
+  user.orders.push({
+    productName,
+    price,
+    quantity,
+  });
+  await user.save();
+  return user;
+};
+
 /*
 export const calculateTotalPriceOfOrders = async (
   userId: number,
@@ -60,9 +90,21 @@ export const calculateTotalPriceOfOrders = async (
 };
 */
 
+const getUserOrdersFromDB = async (userId: string) => {
+  const user = await UserModel.findOne({ userId });
+  if (!user) {
+    throw { code: 404, description: 'User not found!' };
+  }
+
+  return user.orders;
+};
+
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getUserByIdFromDB,
   updateUserInDB,
+  deleteUserFromDB,
+  addNewProductToOrderInDB,
+  getUserOrdersFromDB,
 };
