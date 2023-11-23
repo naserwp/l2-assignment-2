@@ -10,10 +10,10 @@ const getAllUsersFromDB = async () => {
   const result = await UserModel.find();
   return result;
 };
-// export const getAllUsersFromDB = async (): Promise<User[]> => {
+// export const getUserByIdFromDB = async (userId: string): Promise<User[]> => {
 //   try {
-//     const users = await UserModel.find(
-//       {},
+//     const users = await UserModel.findOne(
+//       { userId },
 //       'username fullName age email address',
 //     );
 //     return users;

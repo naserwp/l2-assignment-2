@@ -187,7 +187,7 @@ const getTotalPriceOfOrders = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     if (error.code === 404) {
       res.status(404).json({
         success: false,

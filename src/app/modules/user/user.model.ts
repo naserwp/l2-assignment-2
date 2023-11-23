@@ -16,13 +16,26 @@ const addressSchema = new Schema<Address>({
   city: String,
   country: String,
 });
+
 const userSchema = new Schema<User>({
-  userId: { type: Number, unique: true },
-  username: { type: String, unique: true },
-  password: String,
+  userId: {
+    type: Number,
+    unique: true,
+    required: [true, 'User ID is required'],
+  },
+  username: {
+    type: String,
+    unique: true,
+    required: [true, 'Username is required'],
+  },
+  password: { type: String, required: [true, 'Password is required'] },
   fullName: fullNameSchema,
   age: Number,
-  email: String,
+  email: {
+    type: String,
+    unique: true,
+    required: [true, 'Email is required'],
+  },
   isActive: String,
   hobbies: [String],
   address: addressSchema,
