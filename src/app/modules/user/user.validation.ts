@@ -52,7 +52,7 @@ export const userValidationSchema = z.object({
   fullName: nameValidationSchema,
   age: z.number(),
   email: z.string().email({ message: 'Invalid email address' }),
-  isActive: z.string(),
+  isActive: z.enum(['active', 'blocked']).default('active'),
   hobbies: z
     .array(
       z

@@ -27,11 +27,12 @@ export type User = {
   hobbies: string[];
   address: Address;
   orders: Order[];
-  isActive: string;
+  isActive: 'active' | 'blocked';
+  isDeleted: boolean;
 };
 
 export type UserMethod = {
-  // eslint-disable-next-line no-unused-vars
+  //   eslint-disable-next-line no-unused-vars
   isUserExists(userId: string): Promise<User | null>;
 };
 export type UserModel = Model<User, Record<string, never>, UserMethod>;

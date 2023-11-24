@@ -40,45 +40,61 @@ const addressSchema = new Schema<Address>({
   },
 });
 
-const userSchema = new Schema<User, UserModel, UserMethod>({
-  userId: {
-    type: Number,
-    unique: true,
-    required: [true, 'User ID is required'],
+const userSchema = new Schema<User, UserModel, UserMethod>(
+  {
+    userId: {
+      type: Number,
+      unique: true,
+      required: [true, 'User ID is required'],
+    },
+    username: {
+      type: String,
+      unique: true,
+      required: [true, 'Username is required'],
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+    },
+    fullName: {
+      type: fullNameSchema,
+      required: [true, 'Full Name is required'],
+    },
+    age: Number,
+    email: {
+      type: String,
+      unique: true,
+      required: [true, 'Email is required'],
+    },
+    isActive: {
+      type: String,
+      enum: ['active', 'blocked'],
+      default: 'active',
+    },
+    hobbies: {
+      type: [String],
+      required: [true, 'Hobbies is required, at list one hobbies'],
+    },
+    address: {
+      type: addressSchema,
+      required: [true, 'Address is required'],
+    },
+    orders: [orderSchema],
   },
-  username: {
-    type: String,
-    unique: true,
-    required: [true, 'Username is required'],
-    trim: true,
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  password: {
-    type: String,
-    required: [true, 'Password is required'],
-  },
-  fullName: {
-    type: fullNameSchema,
-    required: true,
-  },
-  age: Number,
-  email: {
-    type: String,
-    unique: true,
-    required: [true, 'Email is required'],
-  },
-  isActive: String,
-  hobbies: {
-    type: [String],
-    required: [true, 'Hobbies is required, at list one hobbies'],
-  },
-  address: {
-    type: addressSchema,
-    required: [true, 'Address is required'],
-  },
-  orders: [orderSchema],
-});
+);
 
 userSchema.index({ userId: 1, username: 1, email: 1 }, { unique: true });
+
+//virtual
+userSchema.virtual('fullNameDisplay').get(function () {
+  return `${this.fullName.firstName}  ${this.fullName.lastName}`;
+});
 
 // pre save middleware / hooks
 userSchema.pre('save', async function (next) {

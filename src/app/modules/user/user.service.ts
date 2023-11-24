@@ -53,21 +53,16 @@ const getUserByIdFromDB = async (userId: string) => {
 // };
 
 const updateUserInDB = async (userId: string, updatedUserData: User) => {
-  // Check if a new password is provided
   if (updatedUserData.password) {
-    // Hash the new password
     updatedUserData.password = await bcrypt.hash(
       updatedUserData.password,
       Number(config.bcrypt_salt_rounds),
     );
   }
-
-  // Use findOneAndUpdate to get the updated document
   const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
     new: true,
   });
 
-  // Exclude the password field from the response
   if (result) {
     result.password = '';
   }
