@@ -106,6 +106,29 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+// const updateUser = async (req: Request, res: Response) => {
+//   try {
+//     const { userId } = req.params;
+//     const { user: updatedUserData } = req.body;
+
+//     const result = await UserServices.updateUserInDB(userId, updatedUserData);
+
+//     res.status(200).json({
+//       success: true,
+//       message: 'User updated successfully',
+//       data: result,
+//     });
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   } catch (err: any) {
+//     console.log(err);
+//     res.status(500).json({
+//       success: false,
+//       message: err.message || 'Something went wrong',
+//       error: err,
+//     });
+//   }
+// };
+
 // delete user
 const deleteUser = async (req: Request, res: Response) => {
   try {
@@ -211,6 +234,7 @@ const getTotalPriceOfOrders = async (req: Request, res: Response) => {
     });
   } catch (error) {
     // console.error(error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((error as any).code === 404) {
       res.status(404).json({
         success: false,

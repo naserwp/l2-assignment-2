@@ -2,20 +2,6 @@ import UserModel from './user.model';
 import { User } from './user.interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
-// const createUserIntoDB = async (user: User) => {
-//   const result = await UserModel.create(user);
-//   return result;
-// };
-
-// const createUserIntoDB = async (userData: User) => {
-//   //   const result = await UserModel.create(user);
-//   const user = new User(userData);
-//   if (await user.isUserExists(userData.userId)) {
-//     throw new Error('User already exists');
-//   }
-
-//   return user;
-// };
 
 const createUserIntoDB = async (userData: User) => {
   try {
@@ -44,14 +30,6 @@ const getUserByIdFromDB = async (userId: string) => {
   return result;
 };
 
-// Add the following function for updating user information
-// const updateUserInDB = async (userId: string, updatedUserData: User) => {
-//   const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
-//     new: true,
-//   });
-//   return result;
-// };
-
 const updateUserInDB = async (userId: string, updatedUserData: User) => {
   if (updatedUserData.password) {
     updatedUserData.password = await bcrypt.hash(
@@ -59,6 +37,7 @@ const updateUserInDB = async (userId: string, updatedUserData: User) => {
       Number(config.bcrypt_salt_rounds),
     );
   }
+
   const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
     new: true,
   });
@@ -69,6 +48,50 @@ const updateUserInDB = async (userId: string, updatedUserData: User) => {
 
   return result;
 };
+
+// const updateUserInDB = async (userId: string, updatedUserData: User) => {
+//   try {
+//     if (updatedUserData.password) {
+//       updatedUserData.password = await bcrypt.hash(
+//         updatedUserData.password,
+//         Number(config.bcrypt_salt_rounds),
+//       );
+//     }
+
+//     // Find the user before the update
+//     const existingUser = await UserModel.findOne({ userId });
+
+//     // Update the user
+//     const result = await UserModel.findOneAndUpdate(
+//       { userId },
+//       updatedUserData,
+//       {
+//         new: true,
+//       },
+//     );
+
+//     if (!result) {
+//       throw new Error('User not found');
+//     }
+
+//     // Compare the updated user with the existing user to determine the modified fields
+//     const modifiedFields: string[] = [];
+//     Object.keys(updatedUserData).forEach((key) => {
+//       if (existingUser[key] !== updatedUserData[key]) {
+//         modifiedFields.push(key);
+//       }
+//     });
+
+//     if (modifiedFields.length === 0) {
+//       throw new Error('No fields were updated');
+//     }
+
+//     return { user: result, modifiedFields };
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// };
 
 // delete user information
 const deleteUserFromDB = async (userId: string) => {

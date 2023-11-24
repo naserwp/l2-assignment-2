@@ -28,7 +28,7 @@ export type User = {
   address: Address;
   orders: Order[];
   isActive: 'active' | 'blocked';
-  isDeleted: boolean;
+  isDeleted?: boolean;
 };
 
 export type UserMethod = {

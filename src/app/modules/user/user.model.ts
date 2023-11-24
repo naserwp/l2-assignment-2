@@ -81,6 +81,9 @@ const userSchema = new Schema<User, UserModel, UserMethod>(
       required: [true, 'Address is required'],
     },
     orders: [orderSchema],
+    isDeleted: {
+      type: Boolean,
+    },
   },
   {
     toJSON: {
@@ -93,7 +96,7 @@ userSchema.index({ userId: 1, username: 1, email: 1 }, { unique: true });
 
 //virtual
 userSchema.virtual('fullNameDisplay').get(function () {
-  return `${this.fullName.firstName}  ${this.fullName.lastName}`;
+  return `${this.fullName.firstName} ${this.fullName.lastName}`;
 });
 
 // pre save middleware / hooks
