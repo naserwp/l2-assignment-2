@@ -1,26 +1,24 @@
-// import { getUserByIdFromDB } from './user.service';
-// import { getAllUsersFromDB } from './user.service';
-// import { User } from './user.interface';
-// import { getAllUsers, createUser } from './user.controller';
 import { Request, Response } from 'express';
-// import UserModel from './user.model';
 import { UserServices } from './user.service';
+import userValidationSchema from './user.validation';
 
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user: userData } = req.body;
 
-    const result = await UserServices.createUserIntoDB(userData);
+    const zodValidation = userValidationSchema.parse(userData);
+
+    const result = await UserServices.createUserIntoDB(zodValidation);
 
     res.status(200).json({
       success: true,
       message: 'User is created successfully',
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong to create user',
+      message: err.message || 'Something went wrong to create user',
       error: err,
     });
     console.log(err);
@@ -51,11 +49,23 @@ const getUserById = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const result = await UserServices.getUserByIdFromDB(userId);
 
-    res.status(200).json({
-      success: true,
-      message: 'Users is retrieved successfully',
-      data: result,
-    });
+    if (!result) {
+      res.status(400).json({
+        success: false,
+        message: 'User not found',
+        data: result,
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: 'User retrieved successfully',
+        data: result,
+      });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -193,7 +203,7 @@ const getTotalPriceOfOrders = async (req: Request, res: Response) => {
     });
   } catch (error) {
     // console.error(error);
-    if (error.code === 404) {
+    if ((error as any).code === 404) {
       res.status(404).json({
         success: false,
         message: 'User not found',

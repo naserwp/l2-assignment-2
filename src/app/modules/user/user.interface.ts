@@ -1,7 +1,10 @@
+// import { User } from './user.interface';
 // models/user.model.ts
 // import mongoose, { Document, Schema } from 'mongoose';
 // import { Schema, model, connect } from 'mongoose';
 // import { Schema, model, connect } from 'mongoose';
+
+import { Document, Model } from 'mongoose';
 
 export type Order = {
   productName: string;
@@ -30,5 +33,10 @@ export type User = {
   hobbies: string[];
   address: Address;
   orders: Order[];
-  isActive: 'active' | 'blocked';
+  isActive: string;
 };
+
+export type UserMethod = {
+  isUserExists(userId: string): Promise<User | null>;
+};
+export type UserModel = Model<User, Record<string, never>, UserMethod>;

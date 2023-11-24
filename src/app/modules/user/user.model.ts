@@ -1,5 +1,12 @@
 import { Schema, model } from 'mongoose';
-import { User, Order, Name, Address } from './user.interface';
+import {
+  User,
+  Order,
+  Name,
+  Address,
+  UserMethod,
+  UserModel,
+} from './user.interface';
 
 const orderSchema = new Schema<Order>({
   productName: String,
@@ -31,7 +38,7 @@ const addressSchema = new Schema<Address>({
   },
 });
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<User, UserModel, UserMethod>({
   userId: {
     type: Number,
     unique: true,
@@ -68,6 +75,17 @@ const userSchema = new Schema<User>({
 
 userSchema.index({ userId: 1, username: 1, email: 1 }, { unique: true });
 
-const UserModel = model<User>('User', userSchema);
+// userSchema.methods.isUserExists = async function (userId: string) {
+//   const existingUser = await UserModel.findOne({ userId });
+//   return existingUser;
+// };
+
+// Define isUserExists method on the model itself
+userSchema.statics.isUserExists = async function (userId: string) {
+  const existingUser = await this.findOne({ userId });
+  return existingUser;
+};
+
+const UserModel = model<User, UserModel>('User', userSchema);
 
 export default UserModel;

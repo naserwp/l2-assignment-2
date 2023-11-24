@@ -1,9 +1,36 @@
 import UserModel from './user.model';
 import { User } from './user.interface';
 
-const createUserIntoDB = async (user: User) => {
-  const result = await UserModel.create(user);
-  return result;
+// const createUserIntoDB = async (user: User) => {
+//   const result = await UserModel.create(user);
+//   return result;
+// };
+
+// const createUserIntoDB = async (userData: User) => {
+//   //   const result = await UserModel.create(user);
+//   const user = new User(userData);
+//   if (await user.isUserExists(userData.userId)) {
+//     throw new Error('User already exists');
+//   }
+
+//   return user;
+// };
+
+const createUserIntoDB = async (userData: User) => {
+  try {
+    // Check if the user already exists
+    const existingUser = await UserModel.isUserExists(userData.userId);
+    if (existingUser) {
+      throw new Error('User already exists');
+    }
+
+    // If the user doesn't exist, create a new user
+    const newUser = await UserModel.create(userData);
+    return newUser;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 const getAllUsersFromDB = async () => {
