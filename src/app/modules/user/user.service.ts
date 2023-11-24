@@ -1,6 +1,7 @@
 import UserModel from './user.model';
 import { User } from './user.interface';
-
+import config from '../../config';
+import bcrypt from 'bcrypt';
 // const createUserIntoDB = async (user: User) => {
 //   const result = await UserModel.create(user);
 //   return result;
@@ -37,18 +38,6 @@ const getAllUsersFromDB = async () => {
   const result = await UserModel.find();
   return result;
 };
-// export const getUserByIdFromDB = async (userId: string): Promise<User[]> => {
-//   try {
-//     const users = await UserModel.findOne(
-//       { userId },
-//       'username fullName age email address',
-//     );
-//     return users;
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
 
 const getUserByIdFromDB = async (userId: string) => {
   const result = await UserModel.findOne({ userId });
@@ -56,10 +45,33 @@ const getUserByIdFromDB = async (userId: string) => {
 };
 
 // Add the following function for updating user information
+// const updateUserInDB = async (userId: string, updatedUserData: User) => {
+//   const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
+//     new: true,
+//   });
+//   return result;
+// };
+
 const updateUserInDB = async (userId: string, updatedUserData: User) => {
+  // Check if a new password is provided
+  if (updatedUserData.password) {
+    // Hash the new password
+    updatedUserData.password = await bcrypt.hash(
+      updatedUserData.password,
+      Number(config.bcrypt_salt_rounds),
+    );
+  }
+
+  // Use findOneAndUpdate to get the updated document
   const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
     new: true,
   });
+
+  // Exclude the password field from the response
+  if (result) {
+    result.password = '';
+  }
+
   return result;
 };
 

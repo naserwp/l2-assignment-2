@@ -15,10 +15,13 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User is created successfully',
       data: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'Something went wrong to create user',
+      message:
+        err.message ||
+        'Something went wrong to create user/ User Could not be created',
       error: err,
     });
     console.log(err);
@@ -34,11 +37,14 @@ export const getAllUsers = async (req: Request, res: Response) => {
       message: 'Users are retrieved successfully',
       data: result,
     });
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message:
+        error.message ||
+        'Something went wrong / all User could not be retrieved',
       error,
     });
   }
@@ -66,11 +72,13 @@ const getUserById = async (req: Request, res: Response) => {
         data: result,
       });
     }
-  } catch (error) {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.message || 'Something went wrong / on the server',
       error,
     });
   }

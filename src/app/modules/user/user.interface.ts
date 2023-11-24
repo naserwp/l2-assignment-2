@@ -31,6 +31,7 @@ export type User = {
 };
 
 export type UserMethod = {
+  // eslint-disable-next-line no-unused-vars
   isUserExists(userId: string): Promise<User | null>;
 };
 export type UserModel = Model<User, Record<string, never>, UserMethod>;

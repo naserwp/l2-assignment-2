@@ -54,7 +54,6 @@ const userSchema = new Schema<User, UserModel, UserMethod>({
   },
   password: {
     type: String,
-    unique: true,
     required: [true, 'Password is required'],
   },
   fullName: {
