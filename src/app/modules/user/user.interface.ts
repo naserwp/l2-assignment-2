@@ -1,10 +1,4 @@
-// import { User } from './user.interface';
-// models/user.model.ts
-// import mongoose, { Document, Schema } from 'mongoose';
-// import { Schema, model, connect } from 'mongoose';
-// import { Schema, model, connect } from 'mongoose';
-
-import { Document, Model } from 'mongoose';
+import { Model } from 'mongoose';
 
 export type Order = {
   productName: string;

@@ -7,6 +7,8 @@ import {
   UserMethod,
   UserModel,
 } from './user.interface';
+import config from '../../config';
+import bcrypt from 'bcrypt';
 
 const orderSchema = new Schema<Order>({
   productName: String,
@@ -50,7 +52,11 @@ const userSchema = new Schema<User, UserModel, UserMethod>({
     required: [true, 'Username is required'],
     trim: true,
   },
-  password: { type: String, required: [true, 'Password is required'] },
+  password: {
+    type: String,
+    unique: true,
+    required: [true, 'Password is required'],
+  },
   fullName: {
     type: fullNameSchema,
     required: true,
@@ -75,10 +81,23 @@ const userSchema = new Schema<User, UserModel, UserMethod>({
 
 userSchema.index({ userId: 1, username: 1, email: 1 }, { unique: true });
 
-// userSchema.methods.isUserExists = async function (userId: string) {
-//   const existingUser = await UserModel.findOne({ userId });
-//   return existingUser;
-// };
+// pre save middleware / hooks
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+// post save middleware / hooks
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+
+  next();
+});
 
 // Define isUserExists method on the model itself
 userSchema.statics.isUserExists = async function (userId: string) {
