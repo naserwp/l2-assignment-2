@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { UserServices } from './user.service';
 import userValidationSchema from './user.validation';
 
+// create user controller
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user: userData } = req.body;
@@ -28,6 +29,7 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
+// get all user controllers
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserServices.getAllUsersFromDB();
@@ -50,6 +52,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+// get user by id controllers
 const getUserById = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -84,6 +87,7 @@ const getUserById = async (req: Request, res: Response) => {
   }
 };
 
+// update user controllers
 const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -106,30 +110,7 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-// const updateUser = async (req: Request, res: Response) => {
-//   try {
-//     const { userId } = req.params;
-//     const { user: updatedUserData } = req.body;
-
-//     const result = await UserServices.updateUserInDB(userId, updatedUserData);
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'User updated successfully',
-//       data: result,
-//     });
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   } catch (err: any) {
-//     console.log(err);
-//     res.status(500).json({
-//       success: false,
-//       message: err.message || 'Something went wrong',
-//       error: err,
-//     });
-//   }
-// };
-
-// delete user
+// delete user controllers
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -159,42 +140,7 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-// add new product to order list
-// const addNewProductToOrder = async (req: Request, res: Response) => {
-//   try {
-//     const { userId } = req.params;
-//     const { productName, price, quantity } = req.body;
-
-//     const result = await UserServices.addNewProductToOrderInDB(
-//       userId,
-//       productName,
-//       price,
-//       quantity,
-//     );
-
-//     if (!result) {
-//       res.status(404).json({
-//         success: false,
-//         message: 'User not found',
-//         data: null,
-//       });
-//     } else {
-//       res.status(200).json({
-//         success: true,
-//         message: 'Order created successfully!',
-//         data: null,
-//       });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({
-//       success: false,
-//       message: 'Something went wrong',
-//       error,
-//     });
-//   }
-// };
-
+// add new product controllers
 const addNewProductToOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -230,6 +176,7 @@ const addNewProductToOrder = async (req: Request, res: Response) => {
   }
 };
 
+// get user order controllers
 const getUserOrders = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -252,7 +199,7 @@ const getUserOrders = async (req: Request, res: Response) => {
   }
 };
 
-// calculate total order single user by id
+// calculate total order single user by id controllers
 const getTotalPriceOfOrders = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -298,6 +245,4 @@ export const UserControllers = {
   addNewProductToOrder,
   getUserOrders,
   getTotalPriceOfOrders,
-
-  //   getTotalPriceOfOrders,
 };

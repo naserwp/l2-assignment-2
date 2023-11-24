@@ -3,15 +3,20 @@ import { User } from './user.interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
 
+// create user into DB
 const createUserIntoDB = async (userData: User) => {
   try {
-    // Check if the user already exists
-    const existingUser = await UserModel.isUserExists(userData.userId);
+    // Check if user already exists
+    // const existingUser = await UserModel.isUserExists(userData.userId);
+    const existingUser = await UserModel.isUserExists(
+      userData.userId.toString(),
+    );
+
     if (existingUser) {
       throw new Error('User already exists');
     }
 
-    // If the user doesn't exist, create a new user
+    // If user doesn't exist, create new user
     const newUser = await UserModel.create(userData);
     return newUser;
   } catch (error) {
@@ -30,6 +35,7 @@ const getUserByIdFromDB = async (userId: string) => {
   return result;
 };
 
+// update user in DB
 const updateUserInDB = async (userId: string, updatedUserData: User) => {
   if (updatedUserData.password) {
     updatedUserData.password = await bcrypt.hash(
@@ -49,80 +55,13 @@ const updateUserInDB = async (userId: string, updatedUserData: User) => {
   return result;
 };
 
-// const updateUserInDB = async (userId: string, updatedUserData: User) => {
-//   try {
-//     if (updatedUserData.password) {
-//       updatedUserData.password = await bcrypt.hash(
-//         updatedUserData.password,
-//         Number(config.bcrypt_salt_rounds),
-//       );
-//     }
-
-//     // Find the user before the update
-//     const existingUser = await UserModel.findOne({ userId });
-
-//     // Update the user
-//     const result = await UserModel.findOneAndUpdate(
-//       { userId },
-//       updatedUserData,
-//       {
-//         new: true,
-//       },
-//     );
-
-//     if (!result) {
-//       throw new Error('User not found');
-//     }
-
-//     // Compare the updated user with the existing user to determine the modified fields
-//     const modifiedFields: string[] = [];
-//     Object.keys(updatedUserData).forEach((key) => {
-//       if (existingUser[key] !== updatedUserData[key]) {
-//         modifiedFields.push(key);
-//       }
-//     });
-
-//     if (modifiedFields.length === 0) {
-//       throw new Error('No fields were updated');
-//     }
-
-//     return { user: result, modifiedFields };
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
-
-// delete user information
+// delete user information in DB
 const deleteUserFromDB = async (userId: string) => {
   const result = await UserModel.deleteOne({ userId });
   return result;
 };
 
-// add new product to order in db by user id
-
-// const addNewProductToOrderInDB = async (
-//   userId: string,
-//   productName: string,
-//   price: number,
-//   quantity: number,
-// ) => {
-//   const user = await UserModel.findOne({ userId });
-//   if (!user) {
-//     return null;
-//   }
-//   if (!user.orders) {
-//     user.orders = [];
-//   }
-//   user.orders.push({
-//     productName,
-//     price,
-//     quantity,
-//   });
-//   await user.save();
-//   return user;
-// };
-
+// add new product to order into DB
 const addNewProductToOrderInDB = async (
   userId: string,
   productName: string,
@@ -140,7 +79,6 @@ const addNewProductToOrderInDB = async (
       user.orders = [];
     }
 
-    // Add the new product to the order list
     user.orders.push({
       productName,
       price,
@@ -159,6 +97,7 @@ const addNewProductToOrderInDB = async (
   }
 };
 
+//get user orders from DB
 const getUserOrdersFromDB = async (userId: string) => {
   const user = await UserModel.findOne({ userId });
   if (!user) {
@@ -168,7 +107,7 @@ const getUserOrdersFromDB = async (userId: string) => {
   return user.orders;
 };
 
-// calculate total price of orders
+// calculate total price of orders in DB
 const calculateTotalPriceOfOrders = async (userId: number): Promise<number> => {
   try {
     const user = await UserModel.findOne({ userId });
@@ -176,7 +115,6 @@ const calculateTotalPriceOfOrders = async (userId: number): Promise<number> => {
       throw { code: 404, description: 'User not found!' };
     }
 
-    // Calculate total price of orders
     const totalPrice = user.orders.reduce(
       (total, order) => total + order.price * order.quantity,
       0,
@@ -189,6 +127,7 @@ const calculateTotalPriceOfOrders = async (userId: number): Promise<number> => {
   }
 };
 
+//export userServices
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
