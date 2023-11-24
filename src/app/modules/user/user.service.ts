@@ -31,7 +31,7 @@ const getUserByIdFromDB = async (userId: string) => {
 // Add the following function for updating user information
 const updateUserInDB = async (userId: string, updatedUserData: User) => {
   const result = await UserModel.findOneAndUpdate({ userId }, updatedUserData, {
-    new: true, // Return the updated document
+    new: true,
   });
   return result;
 };
@@ -65,30 +65,6 @@ const addNewProductToOrderInDB = async (
   await user.save();
   return user;
 };
-
-/*
-export const calculateTotalPriceOfOrders = async (
-  userId: number,
-): Promise<number> => {
-  try {
-    const user = await UserModel.findOne({ userId });
-    if (!user) {
-      throw { code: 404, description: 'User not found!' };
-    }
-
-    // Calculate total price of orders
-    const totalPrice = user.orders.reduce(
-      (total, order) => total + order.price * order.quantity,
-      0,
-    );
-
-    return totalPrice;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-*/
 
 const getUserOrdersFromDB = async (userId: string) => {
   const user = await UserModel.findOne({ userId });

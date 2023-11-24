@@ -18,6 +18,11 @@ const createUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong to create user',
+      error: err,
+    });
     console.log(err);
   }
 };

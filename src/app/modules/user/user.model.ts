@@ -8,13 +8,27 @@ const orderSchema = new Schema<Order>({
 });
 
 const fullNameSchema = new Schema<Name>({
-  firstName: String,
-  lastName: String,
+  firstName: {
+    type: String,
+    required: [true, 'First Name is required'],
+    trim: true,
+  },
+  lastName: {
+    type: String,
+    required: [true, 'Last Name is required'],
+    trim: true,
+  },
 });
 const addressSchema = new Schema<Address>({
   street: String,
-  city: String,
-  country: String,
+  city: {
+    type: String,
+    required: [true, 'City  is required'],
+  },
+  country: {
+    type: String,
+    required: [true, 'Country  is required'],
+  },
 });
 
 const userSchema = new Schema<User>({
@@ -27,9 +41,13 @@ const userSchema = new Schema<User>({
     type: String,
     unique: true,
     required: [true, 'Username is required'],
+    trim: true,
   },
   password: { type: String, required: [true, 'Password is required'] },
-  fullName: fullNameSchema,
+  fullName: {
+    type: fullNameSchema,
+    required: true,
+  },
   age: Number,
   email: {
     type: String,
@@ -37,10 +55,18 @@ const userSchema = new Schema<User>({
     required: [true, 'Email is required'],
   },
   isActive: String,
-  hobbies: [String],
-  address: addressSchema,
+  hobbies: {
+    type: [String],
+    required: [true, 'Hobbies is required, at list one hobbies'],
+  },
+  address: {
+    type: addressSchema,
+    required: [true, 'Address is required'],
+  },
   orders: [orderSchema],
 });
+
+userSchema.index({ userId: 1, username: 1, email: 1 }, { unique: true });
 
 const UserModel = model<User>('User', userSchema);
 
