@@ -101,26 +101,62 @@ const deleteUserFromDB = async (userId: string) => {
 
 // add new product to order in db by user id
 
+// const addNewProductToOrderInDB = async (
+//   userId: string,
+//   productName: string,
+//   price: number,
+//   quantity: number,
+// ) => {
+//   const user = await UserModel.findOne({ userId });
+//   if (!user) {
+//     return null;
+//   }
+//   if (!user.orders) {
+//     user.orders = [];
+//   }
+//   user.orders.push({
+//     productName,
+//     price,
+//     quantity,
+//   });
+//   await user.save();
+//   return user;
+// };
+
 const addNewProductToOrderInDB = async (
   userId: string,
   productName: string,
   price: number,
   quantity: number,
 ) => {
-  const user = await UserModel.findOne({ userId });
-  if (!user) {
-    return null;
+  try {
+    const user = await UserModel.findOne({ userId });
+
+    if (!user) {
+      throw { code: 404, description: 'User not found!' };
+    }
+
+    if (!user.orders) {
+      user.orders = [];
+    }
+
+    // Add the new product to the order list
+    user.orders.push({
+      productName,
+      price,
+      quantity,
+    });
+
+    await user.save();
+
+    return {
+      userId: user.userId,
+      message: 'Order created successfully!',
+    };
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
-  if (!user.orders) {
-    user.orders = [];
-  }
-  user.orders.push({
-    productName,
-    price,
-    quantity,
-  });
-  await user.save();
-  return user;
 };
 
 const getUserOrdersFromDB = async (userId: string) => {

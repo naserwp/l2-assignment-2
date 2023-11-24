@@ -160,6 +160,41 @@ const deleteUser = async (req: Request, res: Response) => {
 };
 
 // add new product to order list
+// const addNewProductToOrder = async (req: Request, res: Response) => {
+//   try {
+//     const { userId } = req.params;
+//     const { productName, price, quantity } = req.body;
+
+//     const result = await UserServices.addNewProductToOrderInDB(
+//       userId,
+//       productName,
+//       price,
+//       quantity,
+//     );
+
+//     if (!result) {
+//       res.status(404).json({
+//         success: false,
+//         message: 'User not found',
+//         data: null,
+//       });
+//     } else {
+//       res.status(200).json({
+//         success: true,
+//         message: 'Order created successfully!',
+//         data: null,
+//       });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Something went wrong',
+//       error,
+//     });
+//   }
+// };
+
 const addNewProductToOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -181,8 +216,8 @@ const addNewProductToOrder = async (req: Request, res: Response) => {
     } else {
       res.status(200).json({
         success: true,
-        message: 'Order created successfully!',
-        data: null,
+        message: result.message,
+        data: { userId: result.userId },
       });
     }
   } catch (error) {
