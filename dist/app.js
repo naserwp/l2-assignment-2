@@ -15,7 +15,7 @@ app.use('/api/users', user_route_1.UserRoutes);
 app.get('/', (req, res) => {
     res.status(200).json({
         success: true,
-        message: 'Welcome to our Assaignment-2 API!',
+        message: 'Welcome to our Assaignment-2 API! Applo Level 2 PH',
     });
 });
 exports.default = app;

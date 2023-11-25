@@ -13,7 +13,7 @@ app.use('/api/users', UserRoutes);
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
-    message: 'Welcome to our Assaignment-2 API!',
+    message: 'Welcome to our Assaignment-2 API! Applo Level 2 PH',
   });
 });
 

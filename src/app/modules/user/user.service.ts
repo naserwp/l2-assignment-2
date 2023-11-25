@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 const createUserIntoDB = async (userData: User) => {
   try {
     // Check if user already exists
-    // const existingUser = await UserModel.isUserExists(userData.userId);
+
     const existingUser = await UserModel.isUserExists(
       userData.userId.toString(),
     );
